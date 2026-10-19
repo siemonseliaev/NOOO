@@ -2,14 +2,16 @@ import unittest
 from pathlib import Path
 import sys
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+sys.path.insert(
+    0, str(Path(__file__).resolve().parent.parent / "src")
+)
 
 from TryKonf import validate_config, load_config
 
 
 class TestConfigValidation(unittest.TestCase):
 
-    def setUp(self):
+    def set_up(self):
         """Базовый корректный словарь конфигурации для тестов."""
         self.valid_config = {
             "package_name": "test_package",
@@ -20,12 +22,16 @@ class TestConfigValidation(unittest.TestCase):
             "max_depth": 3,
         }
 
+    setUp = set_up
+
     def test_validate_config_success(self):
         """Тест на успешную валидацию корректного конфига."""
         try:
             validate_config(self.valid_config)
         except Exception as e:
-            self.fail(f"validate_config вызвал исключение на корректных данных: {e}")
+            self.fail(
+                f"validate_config вызвал исключение на корректных данных: {e}"
+            )
 
     def test_missing_field(self):
         """Тест: ошибка при отсутствии обязательного поля."""
@@ -36,7 +42,10 @@ class TestConfigValidation(unittest.TestCase):
             validate_config(invalid_config)
 
     def test_invalid_type(self):
-        """Тест: ошибка при неверном типе данных (например, строка вместо int для max_depth)."""
+        """
+        Тест: ошибка при неверном типе данных
+        (например, строка вместо int для max_depth).
+        """
         invalid_config = self.valid_config.copy()
         invalid_config["max_depth"] = "three"  # Ожидается int
 
@@ -44,9 +53,14 @@ class TestConfigValidation(unittest.TestCase):
             validate_config(invalid_config)
 
     def test_bool_as_int(self):
-        """Тест: boolean не должен проходить валидацию, если ожидается int."""
+        """
+        Тест: boolean не должен проходить валидацию,
+        если ожидается int.
+        """
         invalid_config = self.valid_config.copy()
-        invalid_config["max_depth"] = True  # В Python bool является подклассом int, проверяем обработку
+        # В Python bool является подклассом int,
+        # проверяем обработку
+        invalid_config["max_depth"] = True
 
         with self.assertRaises(TypeError):
             validate_config(invalid_config)
