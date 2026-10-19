@@ -1,4 +1,2 @@
-@echo off
-chcp 65001 >nul
-python src\KONF_2_1.py
-pause
+#!/usr/bin/env bash
+python3 src/TryKonf.py
